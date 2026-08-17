@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IIST Book Shop - POS & Admin Dashboard</title>
-    <!-- FontAwesome & Libraries -->
+    <title>IIST Book Shop - Smart QR POS</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
@@ -22,320 +21,105 @@
             --text-dark: #0f172a;
         }
 
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; margin: 0; padding: 0; }
+        body { background-color: var(--bg); color: var(--text-dark); display: flex; height: 100vh; overflow: hidden; }
 
-        body {
-            background-color: var(--bg);
-            color: var(--text-dark);
-            display: flex;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        /* --- SIDEBAR NAVIGATION --- */
         .sidebar {
-            width: 250px;
-            background-color: var(--sidebar-bg);
-            color: #fff;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            flex-shrink: 0;
-            transition: transform 0.3s ease;
-            z-index: 100;
+            width: 250px; background-color: var(--sidebar-bg); color: #fff;
+            display: flex; flex-direction: column; justify-content: space-between; flex-shrink: 0;
+            transition: transform 0.3s ease; z-index: 100;
         }
 
-        .brand {
-            padding: 20px;
-            text-align: center;
-            border-bottom: 1px solid #334155;
-        }
-
+        .brand { padding: 20px; text-align: center; border-bottom: 1px solid #334155; }
         .brand h2 { font-size: 20px; color: #60a5fa; }
         .brand p { font-size: 11px; color: #94a3b8; }
 
-        .nav-links {
-            list-style: none;
-            padding: 15px 10px;
-        }
-
+        .nav-links { list-style: none; padding: 15px 10px; }
         .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px 15px;
-            color: #cbd5e1;
-            text-decoration: none;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-bottom: 5px;
-            transition: 0.2s;
-            font-size: 14px;
+            display: flex; align-items: center; gap: 12px; padding: 12px 15px; color: #cbd5e1;
+            text-decoration: none; border-radius: 8px; cursor: pointer; margin-bottom: 5px; transition: 0.2s; font-size: 14px;
         }
-
-        .nav-item:hover, .nav-item.active {
-            background-color: var(--sidebar-active);
-            color: #fff;
-        }
-
+        .nav-item:hover, .nav-item.active { background-color: var(--sidebar-active); color: #fff; }
         .nav-item i { width: 20px; }
 
-        .sidebar-footer {
-            padding: 15px;
-            font-size: 11px;
-            color: #64748b;
-            text-align: center;
-            border-top: 1px solid #334155;
-        }
+        .sidebar-footer { padding: 15px; font-size: 11px; color: #64748b; text-align: center; border-top: 1px solid #334155; }
 
-        /* --- MAIN CONTENT AREA --- */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto;
-        }
-
-        .top-bar {
-            background: #fff;
-            padding: 15px 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e2e8f0;
-        }
-
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        .top-bar { background: #fff; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e2e8f0; }
         .top-bar h2 { font-size: 20px; font-weight: 600; }
 
-        .mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: var(--text-dark);
-        }
+        .mobile-toggle { display: none; background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-dark); }
+        .page-view { padding: 20px; display: none; }
+        .page-view.active { display: block; }
 
-        .page-view {
-            padding: 20px;
-            display: none;
-        }
-
-        .page-view.active {
-            display: block;
-        }
-
-        /* --- DASHBOARD CARDS --- */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .stat-card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: space-between; }
         .stat-card div p { font-size: 12px; color: #64748b; }
         .stat-card div h3 { font-size: 22px; color: var(--text-dark); margin-top: 5px; }
         .stat-card i { font-size: 32px; color: var(--primary); opacity: 0.8; }
 
-        /* --- LAYOUT GRID --- */
-        .pos-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
+        .pos-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; }
+        .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card-title { font-size: 16px; font-weight: 600; margin-bottom: 15px; color: var(--text-dark); display: flex; justify-content: space-between; align-items: center; }
 
-        .card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            margin-bottom: 20px;
-        }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--text-dark);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        /* --- FORMS & TABLES --- */
-        .form-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 12px;
-            flex-wrap: wrap;
-        }
-
+        .form-row { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
         .form-group { flex: 1; min-width: 140px; }
         .form-group label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 4px; color: #475569; }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 9px 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 13px;
-        }
+        .form-group input, .form-group select { width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px; }
 
         .btn {
-            background-color: var(--primary);
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
+            background-color: var(--primary); color: white; padding: 10px 15px; border: none; border-radius: 6px;
+            cursor: pointer; font-weight: 600; font-size: 13px; transition: 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
         }
-
         .btn:hover { opacity: 0.9; }
         .btn-success { background-color: var(--success); }
         .btn-danger { background-color: var(--danger); }
         .btn-warning { background-color: var(--warning); }
         .btn-block { width: 100%; }
 
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            margin-top: 10px;
-        }
-
-        table th, table td {
-            border-bottom: 1px solid #e2e8f0;
-            padding: 10px;
-            text-align: left;
-        }
-
+        .table-responsive { width: 100%; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 10px; }
+        table th, table td { border-bottom: 1px solid #e2e8f0; padding: 10px; text-align: left; }
         table th { background-color: #f1f5f9; font-weight: 600; }
 
-        .summary-box {
-            background-color: #f8fafc;
-            padding: 15px;
-            border-radius: 8px;
-            border: 1px solid #e2e8f0;
-            margin-top: 15px;
-        }
+        .summary-box { background-color: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #e2e8f0; margin-top: 15px; }
+        .summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 14px; }
+        .summary-row.total { font-size: 18px; font-weight: bold; color: var(--primary); border-top: 1px dashed #cbd5e1; padding-top: 8px; margin-top: 8px; }
+        .summary-row.balance { font-size: 16px; font-weight: bold; color: var(--success); border-top: 1px dashed #cbd5e1; padding-top: 8px; margin-top: 8px; }
 
-        .summary-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
+        #reader { width: 100%; max-width: 400px; margin: 0 auto; }
 
-        .summary-row.total {
-            font-size: 18px;
-            font-weight: bold;
-            color: var(--primary);
-            border-top: 1px dashed #cbd5e1;
-            padding-top: 8px;
-            margin-top: 8px;
+        .qr-grid-container {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; padding: 15px;
+            background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; max-height: 400px; overflow-y: auto;
         }
+        .qr-item-card { border: 1px dashed #cbd5e1; padding: 10px; border-radius: 6px; text-align: center; background: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .qr-item-card p { font-size: 11px; font-weight: 600; margin-top: 6px; word-break: break-word; }
 
-        .summary-row.balance {
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--success);
-            border-top: 1px dashed #cbd5e1;
-            padding-top: 8px;
-            margin-top: 8px;
-        }
-
-        /* --- QR SCANNER & MODAL STYLES --- */
-        #reader {
-            width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 200;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-        }
-
-        /* Responsive Mobile Adjustments */
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            .sidebar {
-                position: fixed;
-                left: -250px;
-                top: 0;
-                bottom: 0;
-            }
+            .sidebar { position: fixed; left: -250px; top: 0; bottom: 0; }
             .sidebar.active { transform: translateX(250px); }
             .mobile-toggle { display: block; }
             .pos-grid { grid-template-columns: 1fr; }
         }
 
-        /* THERMAL RECEIPT PRINT STYLING */
-        #printable-invoice { display: none; }
+        #printable-invoice, #printable-qr-sheet { display: none; }
 
         @media print {
             body * { visibility: hidden; }
-            #printable-invoice, #printable-invoice * { visibility: visible; }
-            #printable-invoice {
-                display: block !important;
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 80mm;
-                font-family: monospace;
-                font-size: 12px;
-                padding: 5px;
-            }
+            body.print-mode-receipt #printable-invoice, body.print-mode-receipt #printable-invoice * { visibility: visible; }
+            body.print-mode-receipt #printable-invoice { display: block !important; position: absolute; left: 0; top: 0; width: 80mm; font-family: monospace; font-size: 12px; padding: 5px; }
+
+            body.print-mode-qr #printable-qr-sheet, body.print-mode-qr #printable-qr-sheet * { visibility: visible; }
+            body.print-mode-qr #printable-qr-sheet { display: grid !important; position: absolute; left: 0; top: 0; width: 100%; grid-template-columns: repeat(4, 1fr); gap: 15px; padding: 20px; }
+            body.print-mode-qr .qr-print-box { border: 1px dashed #999; padding: 10px; text-align: center; page-break-inside: avoid; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+            body.print-mode-qr .qr-print-box p { font-size: 12px; font-weight: bold; margin-top: 5px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR NAV -->
     <aside class="sidebar" id="sidebar">
         <div>
             <div class="brand">
@@ -343,27 +127,18 @@
                 <p>Institute of Informatic Skill Tech</p>
             </div>
             <ul class="nav-links">
-                <li class="nav-item active" onclick="switchView('dashboardView', this)">
-                    <i class="fa-solid fa-chart-line"></i> Dashboard
-                </li>
-                <li class="nav-item" onclick="switchView('posView', this)">
-                    <i class="fa-solid fa-cash-register"></i> POS Terminal
-                </li>
-                <li class="nav-item" onclick="switchView('historyView', this)">
-                    <i class="fa-solid fa-receipt"></i> Sales History
-                </li>
-                <li class="nav-item" onclick="switchView('inventoryView', this)">
-                    <i class="fa-solid fa-book"></i> Book Inventory
-                </li>
+                <li class="nav-item active" onclick="switchView('dashboardView', this)"><i class="fa-solid fa-chart-line"></i> Dashboard</li>
+                <li class="nav-item" onclick="switchView('posView', this)"><i class="fa-solid fa-cash-register"></i> POS Terminal</li>
+                <li class="nav-item" onclick="switchView('historyView', this)"><i class="fa-solid fa-receipt"></i> Sales History</li>
+                <li class="nav-item" onclick="switchView('inventoryView', this)"><i class="fa-solid fa-book"></i> Book Inventory</li>
             </ul>
         </div>
         <div class="sidebar-footer">
-            <p>IIST POS System v3.2</p>
+            <p>IIST POS System v4.0</p>
             <p>© 2026 IIST Tech</p>
         </div>
     </aside>
 
-    <!-- MAIN CONTAINER -->
     <main class="main-content">
         <header class="top-bar">
             <div style="display: flex; align-items: center; gap: 15px;">
@@ -375,28 +150,18 @@
             </div>
         </header>
 
-        <!-- 1. DASHBOARD VIEW -->
         <section id="dashboardView" class="page-view active">
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div>
-                        <p>Total Revenue</p>
-                        <h3 id="statRevenue">LKR 0.00</h3>
-                    </div>
+                    <div><p>Total Revenue</p><h3 id="statRevenue">LKR 0.00</h3></div>
                     <i class="fa-solid fa-money-bill-wave"></i>
                 </div>
                 <div class="stat-card">
-                    <div>
-                        <p>Total Orders</p>
-                        <h3 id="statOrders">0</h3>
-                    </div>
+                    <div><p>Total Orders</p><h3 id="statOrders">0</h3></div>
                     <i class="fa-solid fa-cart-shopping"></i>
                 </div>
                 <div class="stat-card">
-                    <div>
-                        <p>Books Available</p>
-                        <h3 id="statBooks">0</h3>
-                    </div>
+                    <div><p>Books Available</p><h3 id="statBooks">0</h3></div>
                     <i class="fa-solid fa-book-open"></i>
                 </div>
             </div>
@@ -406,12 +171,7 @@
                 <div class="table-responsive">
                     <table>
                         <thead>
-                            <tr>
-                                <th>Inv ID</th>
-                                <th>Customer</th>
-                                <th>Total (LKR)</th>
-                                <th>Date</th>
-                            </tr>
+                            <tr><th>Inv ID</th><th>Customer</th><th>Total (LKR)</th><th>Date</th></tr>
                         </thead>
                         <tbody id="dashHistoryBody"></tbody>
                     </table>
@@ -419,7 +179,6 @@
             </div>
         </section>
 
-        <!-- 2. POS TERMINAL VIEW -->
         <section id="posView" class="page-view">
             <div class="pos-grid">
                 <div>
@@ -443,7 +202,6 @@
                             <button class="btn btn-warning" onclick="startScanner()"><i class="fa-solid fa-qrcode"></i> Scan QR Code</button>
                         </div>
 
-                        <!-- WEBCAM SCANNER AREA -->
                         <div id="scannerContainer" style="display: none; margin-bottom: 15px;">
                             <div id="reader"></div>
                             <button class="btn btn-danger btn-block" style="margin-top: 5px;" onclick="stopScanner()">Stop Camera Scanner</button>
@@ -470,13 +228,7 @@
                         <div class="table-responsive">
                             <table>
                                 <thead>
-                                    <tr>
-                                        <th>Book</th>
-                                        <th>Price</th>
-                                        <th>Qty</th>
-                                        <th>Total</th>
-                                        <th>Action</th>
-                                    </tr>
+                                    <tr><th>Book</th><th>Price</th><th>Qty</th><th>Total</th><th>Action</th></tr>
                                 </thead>
                                 <tbody id="cartBody"></tbody>
                             </table>
@@ -522,7 +274,6 @@
             </div>
         </section>
 
-        <!-- 3. SALES HISTORY VIEW -->
         <section id="historyView" class="page-view">
             <div class="card">
                 <div class="card-title">
@@ -535,14 +286,7 @@
                 <div class="table-responsive">
                     <table>
                         <thead>
-                            <tr>
-                                <th>Invoice ID</th>
-                                <th>Customer</th>
-                                <th>Net Total (LKR)</th>
-                                <th>Paid (LKR)</th>
-                                <th>Balance (LKR)</th>
-                                <th>Date</th>
-                            </tr>
+                            <tr><th>Invoice ID</th><th>Customer</th><th>Net Total (LKR)</th><th>Paid (LKR)</th><th>Balance (LKR)</th><th>Date</th></tr>
                         </thead>
                         <tbody id="fullHistoryBody"></tbody>
                     </table>
@@ -550,11 +294,14 @@
             </div>
         </section>
 
-        <!-- 4. INVENTORY VIEW -->
         <section id="inventoryView" class="page-view">
             <div class="card">
                 <div class="card-title">Add New Book to Inventory</div>
                 <div class="form-row">
+                    <div class="form-group">
+                        <label>Book Code / ID</label>
+                        <input type="text" id="invCode" placeholder="E.g: 101 or BK-01">
+                    </div>
                     <div class="form-group" style="flex: 2;">
                         <label>Book Title</label>
                         <input type="text" id="invTitle" placeholder="Python Programming">
@@ -572,16 +319,36 @@
             </div>
 
             <div class="card">
+                <div class="card-title">
+                    <span><i class="fa-solid fa-print"></i> Bulk A4 Smart QR Print Queue</span>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <label style="font-size: 12px; font-weight: bold;">QR Size:</label>
+                        <select id="qrSizeSelect" onchange="renderBulkQRPreview()" style="padding: 5px; font-size: 12px; border-radius: 4px; border: 1px solid #cbd5e1;">
+                            <option value="80">Small (80px)</option>
+                            <option value="120" selected>Medium (120px)</option>
+                            <option value="160">Large (160px)</option>
+                        </select>
+                        <button class="btn btn-success" onclick="printBulkQRSheet()"><i class="fa-solid fa-print"></i> Print A4 Sheet</button>
+                        <button class="btn btn-danger" onclick="clearBulkQRList()">Clear Queue</button>
+                    </div>
+                </div>
+
+                <div class="qr-grid-container" id="bulkQrContainer">
+                    <p style="color: #64748b; font-size: 13px; text-align: center; grid-column: 1 / -1;">No QR codes added for printing yet. Click "Add to Print" on any book below.</p>
+                </div>
+            </div>
+
+            <div class="card">
                 <div class="card-title">Current Book Inventory</div>
                 <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
+                                <th>Book ID</th>
                                 <th>Book Title</th>
                                 <th>Price (LKR)</th>
                                 <th>Available Stock</th>
-                                <th>QR Code</th>
-                                <th>Action</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="inventoryBody"></tbody>
@@ -591,17 +358,6 @@
         </section>
     </main>
 
-    <!-- QR CODE PRINT MODAL -->
-    <div class="modal" id="qrModal">
-        <div class="modal-content">
-            <h3 id="qrModalTitle" style="margin-bottom: 15px;">Book QR Code</h3>
-            <div id="qrcodeDisplay" style="display: flex; justify-content: center; margin-bottom: 15px;"></div>
-            <button class="btn btn-success" onclick="printQRCode()"><i class="fa-solid fa-print"></i> Print QR</button>
-            <button class="btn btn-danger" onclick="closeQRModal()">Close</button>
-        </div>
-    </div>
-
-    <!-- PRINTABLE RECEIPT TEMPLATE -->
     <div id="printable-invoice">
         <div style="text-align: center;">
             <h3 style="margin: 0;">IIST BOOK SHOP</h3>
@@ -636,15 +392,27 @@
         </div>
     </div>
 
+    <div id="printable-qr-sheet"></div>
+
     <script>
         const ADMIN_PASSWORD = "iist123";
 
+        const defaultBooks = [
+            { id: '101', title: 'Python Programming', price: 1500, stock: 20 },
+            { id: '102', title: 'Web Development Guide', price: 2200, stock: 15 }
+        ];
+
         let cart = [];
         let salesHistory = JSON.parse(localStorage.getItem('iist_sales_history')) || [];
-        let inventory = JSON.parse(localStorage.getItem('iist_inventory')) || [
-            { id: 101, title: 'Python Programming', price: 1500, stock: 20 },
-            { id: 102, title: 'Web Development Guide', price: 2200, stock: 15 }
-        ];
+        
+        let savedInventory = localStorage.getItem('iist_inventory');
+        let inventory = savedInventory ? JSON.parse(savedInventory) : defaultBooks;
+        
+        if (!savedInventory) {
+            localStorage.setItem('iist_inventory', JSON.stringify(inventory));
+        }
+
+        let bulkPrintQueue = [];
         let invoiceCounter = parseInt(localStorage.getItem('iist_inv_counter')) || 1001;
         let html5QrCode = null;
 
@@ -657,9 +425,9 @@
         }
 
         function verifyPassword() {
-            const input = prompt("அனுமதி பெற கடவுச்சொல்லை உள்ளிடவும் (Enter Admin Password):");
+            const input = prompt("Enter Admin Password:");
             if (input === ADMIN_PASSWORD) return true;
-            alert("தவறான கடவுச்சொல்! (Incorrect Password)");
+            alert("Incorrect Password!");
             return false;
         }
 
@@ -694,20 +462,34 @@
             const select = document.getElementById('posBookSelect');
             select.innerHTML = '<option value="">Choose Book...</option>';
             inventory.forEach(book => {
-                select.innerHTML += `<option value="${book.id}">${book.title} (Stock: ${book.stock})</option>`;
+                select.innerHTML += `<option value="${book.id}">${book.title} (ID: ${book.id} | Stock: ${book.stock})</option>`;
             });
         }
 
         function autoFillPrice() {
-            const bookId = parseInt(document.getElementById('posBookSelect').value);
-            const book = inventory.find(b => b.id === bookId);
+            const bookId = document.getElementById('posBookSelect').value;
+            const book = inventory.find(b => String(b.id).trim() === String(bookId).trim());
             document.getElementById('itemPrice').value = book ? book.price : '';
         }
 
-        function addItemToCart(bookIdFromScanner = null) {
-            const bookId = bookIdFromScanner || parseInt(document.getElementById('posBookSelect').value);
-            const qty = bookIdFromScanner ? 1 : parseInt(document.getElementById('itemQty').value);
-            const book = inventory.find(b => b.id === bookId);
+        // DIRECT ADD TO CART FUNCTION (FOR SMART QR SCAN)
+        function pushToCart(id, title, price, qty = 1) {
+            const total = price * qty;
+            const existingIndex = cart.findIndex(c => String(c.id).trim() === String(id).trim());
+            
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += qty;
+                cart[existingIndex].total = cart[existingIndex].qty * price;
+            } else {
+                cart.push({ id, title, price, qty, total });
+            }
+            updateCartUI();
+        }
+
+        function addItemToCart() {
+            const bookId = document.getElementById('posBookSelect').value;
+            const qty = parseInt(document.getElementById('itemQty').value);
+            const book = inventory.find(b => String(b.id).trim() === String(bookId).trim());
 
             if (!book || isNaN(qty) || qty <= 0) {
                 alert('தயவுசெய்து சரியான புத்தகத்தை தேர்ந்தெடுக்கவும்!');
@@ -719,15 +501,7 @@
                 return;
             }
 
-            const total = book.price * qty;
-            const existingIndex = cart.findIndex(c => c.id === book.id);
-            if (existingIndex > -1) {
-                cart[existingIndex].qty += qty;
-                cart[existingIndex].total = cart[existingIndex].qty * book.price;
-            } else {
-                cart.push({ id: book.id, title: book.title, price: book.price, qty: qty, total: total });
-            }
-            updateCartUI();
+            pushToCart(book.id, book.title, book.price, qty);
         }
 
         function updateCartUI() {
@@ -789,7 +563,7 @@
             const dateStr = new Date().toLocaleString('en-GB');
 
             cart.forEach(cartItem => {
-                const book = inventory.find(b => b.id === cartItem.id);
+                const book = inventory.find(b => String(b.id).trim() === String(cartItem.id).trim());
                 if (book) book.stock -= cartItem.qty;
             });
             localStorage.setItem('iist_inventory', JSON.stringify(inventory));
@@ -829,6 +603,7 @@
             invoiceCounter++;
             localStorage.setItem('iist_inv_counter', invoiceCounter);
 
+            document.body.className = "print-mode-receipt";
             window.print();
             resetPosForm();
             renderInventory();
@@ -845,53 +620,86 @@
             updateCartUI();
         }
 
-        /* WEBCAM QR SCANNER INTEGRATION */
+        // SMART SCANNER LOGIC (PARSES JSON DATA DIRECTLY FROM QR)
         function startScanner() {
             document.getElementById('scannerContainer').style.display = 'block';
             html5QrCode = new Html5Qrcode("reader");
-            html5QrCode.start(
-                { facingMode: "environment" },
-                { fps: 10, qrbox: { width: 200, height: 200 } },
-                (decodedText) => {
-                    const scannedId = parseInt(decodedText);
-                    const book = inventory.find(b => b.id === scannedId);
-                    if (book) {
-                        addItemToCart(scannedId);
+
+            const config = { fps: 10, qrbox: { width: 200, height: 200 } };
+            
+            const onScanSuccess = (decodedText) => {
+                const scannedStr = decodedText.trim();
+                
+                try {
+                    // Try parsing as Smart JSON QR
+                    const smartData = JSON.parse(scannedStr);
+                    if (smartData.id && smartData.title && smartData.price) {
+                        pushToCart(smartData.id, smartData.title, parseFloat(smartData.price), 1);
                         stopScanner();
-                    } else {
-                        alert("ஸ்கேன் செய்யப்பட்ட QR Code புத்தக பட்டியலில் இல்லை!");
+                        return;
                     }
-                },
-                (errorMessage) => {}
-            ).catch(err => {
-                alert("Cam error: " + err);
-                document.getElementById('scannerContainer').style.display = 'none';
+                } catch(e) {
+                    // Fallback to checking local inventory ID
+                    const book = inventory.find(b => String(b.id).trim() === scannedStr);
+                    if (book) {
+                        pushToCart(book.id, book.title, book.price, 1);
+                        stopScanner();
+                        return;
+                    }
+                }
+
+                alert("Scanned QR invalid or not found: [" + scannedStr + "]");
+            };
+
+            Html5Qrcode.getCameras().then(devices => {
+                if (devices && devices.length > 0) {
+                    let selectedCamera = devices.find(d => d.label.toLowerCase().includes('back') || d.label.toLowerCase().includes('environment')) || devices[devices.length - 1];
+                    html5QrCode.start(selectedCamera.id, config, onScanSuccess).catch(() => fallbackCameraStart(config, onScanSuccess));
+                } else {
+                    fallbackCameraStart(config, onScanSuccess);
+                }
+            }).catch(() => fallbackCameraStart(config, onScanSuccess));
+        }
+
+        function fallbackCameraStart(config, onScanSuccess) {
+            html5QrCode.start({ facingMode: "environment" }, config, onScanSuccess).catch(() => {
+                html5QrCode.start({ facingMode: "user" }, config, onScanSuccess).catch(finalErr => {
+                    alert("Cam error: " + finalErr);
+                    document.getElementById('scannerContainer').style.display = 'none';
+                });
             });
         }
 
         function stopScanner() {
             if (html5QrCode) {
-                html5QrCode.stop().then(() => {
-                    document.getElementById('scannerContainer').style.display = 'none';
-                });
+                html5QrCode.stop().then(() => document.getElementById('scannerContainer').style.display = 'none')
+                .catch(() => document.getElementById('scannerContainer').style.display = 'none');
             }
         }
 
-        /* INVENTORY & QR GENERATION */
         function addInventoryBook() {
+            const manualCode = document.getElementById('invCode').value.trim();
             const title = sanitizeHTML(document.getElementById('invTitle').value.trim());
             const price = parseFloat(document.getElementById('invPrice').value);
             const stock = parseInt(document.getElementById('invStock').value);
 
             if (!title || isNaN(price) || isNaN(stock)) {
-                alert('சரியான புத்தக விவரங்களை உள்ளிடவும்!');
+                alert('தயவுசெய்து சரியான புத்தக விவரங்களை உள்ளிடவும்!');
                 return;
             }
 
-            const newId = Date.now();
+            const newId = manualCode ? manualCode : 'BK-' + (inventory.length + 101);
+
+            const exists = inventory.some(b => String(b.id).trim() === String(newId).trim());
+            if (exists) {
+                alert('இந்த ID ஏற்கனவே பயன்படுத்தப்பட்டுள்ளது! வேறு ID-ஐ உள்ளிடவும்.');
+                return;
+            }
+
             inventory.push({ id: newId, title, price, stock });
             localStorage.setItem('iist_inventory', JSON.stringify(inventory));
 
+            document.getElementById('invCode').value = '';
             document.getElementById('invTitle').value = '';
             document.getElementById('invPrice').value = '';
             document.getElementById('invStock').value = '';
@@ -900,45 +708,109 @@
             renderPosSelect();
         }
 
-        function showQRCodeModal(id, title) {
-            document.getElementById('qrModalTitle').innerText = title + " - QR Code";
-            document.getElementById('qrcodeDisplay').innerHTML = "";
-            new QRCode(document.getElementById('qrcodeDisplay'), {
-                text: id.toString(),
-                width: 150,
-                height: 150
-            });
-            document.getElementById('qrModal').style.display = 'flex';
-        }
-
-        function printQRCode() {
-            const qrWindow = window.open('', '', 'width=400,height=400');
-            qrWindow.document.write('<html><body style="text-align:center;">');
-            qrWindow.document.write('<h3>' + document.getElementById('qrModalTitle').innerText + '</h3>');
-            qrWindow.document.write(document.getElementById('qrcodeDisplay').innerHTML);
-            qrWindow.document.write('</body></html>');
-            qrWindow.document.close();
-            qrWindow.print();
-        }
-
-        function closeQRModal() {
-            document.getElementById('qrModal').style.display = 'none';
-        }
-
         function renderInventory() {
             const body = document.getElementById('inventoryBody');
             body.innerHTML = '';
             inventory.forEach(book => {
                 body.innerHTML += `
                     <tr>
+                        <td><strong>${book.id}</strong></td>
                         <td>${book.title}</td>
                         <td>${book.price.toFixed(2)}</td>
                         <td>${book.stock}</td>
-                        <td><button class="btn btn-warning" onclick="showQRCodeModal(${book.id}, '${book.title}')"><i class="fa-solid fa-qrcode"></i> Get QR</button></td>
-                        <td><button class="btn btn-danger" onclick="deleteInventoryBook(${book.id})"><i class="fa-solid fa-trash"></i> Delete</button></td>
+                        <td>
+                            <button class="btn btn-warning" onclick="addToBulkPrint('${book.id}')"><i class="fa-solid fa-plus"></i> Add to Print</button>
+                            <button class="btn btn-danger" onclick="deleteInventoryBook('${book.id}')"><i class="fa-solid fa-trash"></i> Delete</button>
+                        </td>
                     </tr>
                 `;
             });
+        }
+
+        function addToBulkPrint(bookId) {
+            const book = inventory.find(b => String(b.id).trim() === String(bookId).trim());
+            if (book) {
+                bulkPrintQueue.push(book);
+                renderBulkQRPreview();
+            }
+        }
+
+        function clearBulkQRList() {
+            bulkPrintQueue = [];
+            renderBulkQRPreview();
+        }
+
+        // GENERATING SMART QR WITH EMBEDDED BOOK DETAILS
+        function renderBulkQRPreview() {
+            const container = document.getElementById('bulkQrContainer');
+            container.innerHTML = '';
+
+            if (bulkPrintQueue.length === 0) {
+                container.innerHTML = '<p style="color: #64748b; font-size: 13px; text-align: center; grid-column: 1 / -1;">No QR codes added for printing yet. Click "Add to Print" on any book below.</p>';
+                return;
+            }
+
+            const qrSize = parseInt(document.getElementById('qrSizeSelect').value) || 120;
+
+            bulkPrintQueue.forEach((item, index) => {
+                const divId = `qr_preview_${index}`;
+                const card = document.createElement('div');
+                card.className = 'qr-item-card';
+                card.innerHTML = `
+                    <div id="${divId}"></div>
+                    <p>${item.title} (${item.id})</p>
+                    <button style="background:none; border:none; color:red; cursor:pointer; font-size:11px; margin-top:4px;" onclick="removeFromBulkQueue(${index})">Remove</button>
+                `;
+                container.appendChild(card);
+
+                // Smart JSON Data string stored in QR
+                const smartJsonData = JSON.stringify({ id: item.id, title: item.title, price: item.price });
+
+                new QRCode(document.getElementById(divId), {
+                    text: smartJsonData,
+                    width: qrSize,
+                    height: qrSize
+                });
+            });
+        }
+
+        function removeFromBulkQueue(index) {
+            bulkPrintQueue.splice(index, 1);
+            renderBulkQRPreview();
+        }
+
+        function printBulkQRSheet() {
+            if (bulkPrintQueue.length === 0) {
+                alert('அச்சிட எந்த QR குறியீடும் தேர்ந்தெடுக்கப்படவில்லை!');
+                return;
+            }
+
+            const printSheet = document.getElementById('printable-qr-sheet');
+            printSheet.innerHTML = '';
+            const qrSize = parseInt(document.getElementById('qrSizeSelect').value) || 120;
+
+            bulkPrintQueue.forEach((item, index) => {
+                const printBox = document.createElement('div');
+                printBox.className = 'qr-print-box';
+                const divId = `qr_print_${index}`;
+                printBox.innerHTML = `
+                    <div id="${divId}"></div>
+                    <p>${item.title}</p>
+                    <span style="font-size:10px;">ID: ${item.id} | LKR ${item.price}</span>
+                `;
+                printSheet.appendChild(printBox);
+
+                const smartJsonData = JSON.stringify({ id: item.id, title: item.title, price: item.price });
+
+                new QRCode(document.getElementById(divId), {
+                    text: smartJsonData,
+                    width: qrSize,
+                    height: qrSize
+                });
+            });
+
+            document.body.className = "print-mode-qr";
+            window.print();
         }
 
         function protectedResetAllData() {
@@ -963,7 +835,7 @@
 
         function deleteInventoryBook(id) {
             if (verifyPassword()) {
-                inventory = inventory.filter(b => b.id !== id);
+                inventory = inventory.filter(b => String(b.id).trim() !== String(id).trim());
                 localStorage.setItem('iist_inventory', JSON.stringify(inventory));
                 renderInventory();
                 renderPosSelect();
